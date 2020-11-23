@@ -1,0 +1,21 @@
+d_model: 2048
+
+encoder: bert-base-chinese
+use_tags: true
+use_words: false
+d_kqv: 64
+d_ff: 2048
+word_emb_dropout: 0
+tag_emb_dropout: 0.2
+relu_dropout: 0.4
+residual_dropout: 0.2
+attention_dropout: 0
+num_attn_layers: 4
+num_attn_heads: 8
+
+decoder: graph
+num_gcn_layers: 5
+
+learning_rate: 4e-5
+weight_decay: 1e-6
+subbatch_max_tokens: 1000

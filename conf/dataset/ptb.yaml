@@ -1,0 +1,4 @@
+path_train: data/02-21.10way.clean
+path_val: data/22.auto.clean
+path_test: data/23.auto.clean
+max_sentence_len: 250

@@ -1,0 +1,21 @@
+d_model: 2048
+
+encoder: xlnet-large-cased
+use_tags: false
+use_words: false
+d_kqv: 64
+d_ff: 2048
+word_emb_dropout: 0.2
+tag_emb_dropout: 0
+relu_dropout: 0.2
+residual_dropout: 0
+attention_dropout: 0
+num_attn_layers: 3
+num_attn_heads: 8
+
+decoder: sequence
+d_decoder: 4200
+
+learning_rate: 1e-5
+weight_decay: 1e-7
+subbatch_max_tokens: 700

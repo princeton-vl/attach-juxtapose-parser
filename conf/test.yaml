@@ -1,0 +1,32 @@
+exp_id: test
+model_path: null
+num_workers: 4
+eval_batch_size: 150
+beam_size: 1
+amp: true  # should be disabled when comparing speed with prior methods
+
+model_spec: [
+    "d_model",
+    "encoder",
+    "use_words",
+    "use_tags",
+    "d_kqv",
+    "d_ff",
+    "word_emb_dropout",
+    "tag_emb_dropout",
+    "relu_dropout",
+    "residual_dropout",
+    "attention_dropout",
+    "num_attn_layers",
+    "num_attn_heads",
+    "decoder",
+    "num_gcn_layers",
+    "d_decoder",
+]
+
+defaults:
+  - dataset: ptb
+
+hydra:
+  run:
+    dir: runs/${exp_id}

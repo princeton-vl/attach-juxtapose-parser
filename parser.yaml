@@ -1,0 +1,20 @@
+name: parser
+channels:
+  - pytorch
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.6
+  - ipython
+  - numpy
+  - lark-parser
+  - progressbar2
+  - cudatoolkit=10.2
+  - torchvision
+  - pytorch
+  - mypy
+  - black
+  - hydra-core
+  - pip
+  - pip:
+    - transformers

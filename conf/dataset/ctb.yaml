@@ -1,0 +1,4 @@
+path_train: data/ctb_train.txt
+path_val: data/ctb_dev.txt
+path_test: data/ctb_test.txt
+max_sentence_len: 250

@@ -1,0 +1,42 @@
+exp_id: default
+random_seed: null
+num_workers: 4
+batch_size: 32
+eval_batch_size: 64
+resume: null
+amp: true
+
+num_epochs: 60
+learning_rate_warmup_steps: 150
+learning_rate_patience: 5
+learning_rate_cooldown: 0
+max_grad_norm: 10
+skip_training: false
+log_freq: 10
+
+model_spec: [
+    "d_model",
+    "encoder",
+    "use_words",
+    "use_tags",
+    "d_kqv",
+    "d_ff",
+    "word_emb_dropout",
+    "tag_emb_dropout",
+    "relu_dropout",
+    "residual_dropout",
+    "attention_dropout",
+    "num_attn_layers",
+    "num_attn_heads",
+    "decoder",
+    "num_gcn_layers",
+    "d_decoder",
+]
+
+defaults:
+  - dataset: ptb
+  - model: ptb_xlnet_graph
+
+hydra:
+  run:
+    dir: runs/${exp_id}
