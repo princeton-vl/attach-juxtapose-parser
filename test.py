@@ -3,14 +3,13 @@ The script for validation and testing
 """
 from transition_systems import AttachJuxtapose
 import hydra
-from omegaconf.dictconfig import DictConfig
 from dataloader import create_dataloader
 from models.parser import Parser
 import itertools
 import torch
 import numpy as np
 from time import time
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 from evaluation_metric import FScore, evalb
 from env import Environment, EpochEnd, State
 from progressbar import ProgressBar
@@ -21,87 +20,6 @@ from typing import Dict, Any
 import logging
 
 log = logging.getLogger(__name__)
-
-
-def validate_beam_search(loader: torch.utils.data.DataLoader, model: Parser, cfg: DictConfig) -> FScore:  # type: ignore
-    "Run validation/testing with beam search"
-
-    model.eval()
-    gt_trees = []
-    pred_trees = []
-    bar = ProgressBar(max_value=len(loader))
-    time_start = time()
-
-    with torch.no_grad():  # type: ignore
-        # with torch.cuda.amp.autocast(cfg.amp):
-        device, _ = get_device()
-
-        for i, data_batch in enumerate(loader):
-            tokens_emb = model.encoder(
-                data_batch["tokens_idx"].to(device=device, non_blocking=True),
-                data_batch["tags_idx"].to(device=device, non_blocking=True),
-                data_batch["valid_tokens_mask"].to(device=device, non_blocking=True),
-                data_batch["word_end_mask"].to(device=device, non_blocking=True),
-            )
-            next_token_pos = torch.zeros(1, dtype=torch.int64, device=device)
-            assert len(data_batch["tokens_word"]) == 1
-            beam = [
-                State(
-                    [None],
-                    data_batch["tokens_word"],
-                    tokens_emb,
-                    next_token_pos,
-                    n_step=0,
-                )
-            ]
-            beam_log_prob = [0.0]
-
-            for n_step, (word, tag) in enumerate(
-                zip(data_batch["tokens_word"][0], data_batch["tags"][0])
-            ):
-                next_token_pos = torch.full_like(next_token_pos, fill_value=n_step + 1)
-                new_beam = []
-                new_beam_log_prob = []
-
-                # try to expand each element in the beam
-                for state, logp in zip(beam, beam_log_prob):
-                    actions, log_probs = model(state, topk=cfg.beam_size)
-                    new_beam_log_prob.extend((logp + log_probs).tolist())
-                    for act in actions:
-                        tree = AttachJuxtapose.execute(
-                            state.partial_trees[0],
-                            act,
-                            n_step,
-                            tag,
-                            word,
-                            immutable=True,
-                        )
-                        new_beam.append(
-                            State(
-                                [tree],
-                                data_batch["tokens_word"],
-                                tokens_emb,
-                                next_token_pos,
-                                n_step,
-                            )
-                        )
-
-                idxs_to_keep = np.argsort(new_beam_log_prob)[::-1][: cfg.beam_size]
-                beam = np.array(new_beam)[idxs_to_keep]
-                beam_log_prob = np.array(new_beam_log_prob)[idxs_to_keep]
-
-            # take the tree with maximum log probability
-            assert beam_log_prob[0] == max(beam_log_prob)
-            max_tree = beam[0].partial_trees[0]
-            assert isinstance(max_tree, InternalParseNode)
-            pred_trees.append(max_tree)
-            gt_trees.append(data_batch["trees"][0])
-
-            bar.update(i)
-
-        f1_score = evalb(hydra.utils.to_absolute_path("./EVALB"), gt_trees, pred_trees)
-        log.info("Time elapsed: %f" % (time() - time_start))
-        return f1_score
 
 
 def validate(loader: torch.utils.data.DataLoader, model: Parser, cfg: DictConfig) -> FScore:  # type: ignore
@@ -150,7 +68,7 @@ def validate(loader: torch.utils.data.DataLoader, model: Parser, cfg: DictConfig
             except EpochEnd:
                 # no next batch available (complete)
                 f1_score = evalb(
-                    hydra.utils.to_absolute_path("./EVALB"), gt_trees, pred_trees
+                    hydra.utils.to_absolute_path("./EVALB"), gt_trees, pred_trees  # type: ignore
                 )
                 log.info("Time elapsed: %f" % (time() - time_start))
                 return f1_score
@@ -173,12 +91,12 @@ def restore_hyperparams(saved_cfg: Dict[str, Any], cfg: DictConfig) -> DictConfi
     return cfg
 
 
-@hydra.main(config_path="conf/test.yaml", strict=False)
+@hydra.main(config_path="conf", config_name="test.yaml", strict=False)
 def main(cfg: DictConfig) -> None:
     "The entry point for testing"
 
     assert cfg.model_path is not None, "Need to specify model_path for testing."
-    log.info("\n" + cfg.pretty())
+    log.info("\n" + OmegaConf.to_yaml(cfg))
 
     # restore the hyperparameters used for training
     model_path = hydra.utils.to_absolute_path(cfg.model_path)

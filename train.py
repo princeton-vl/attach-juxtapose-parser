@@ -2,7 +2,7 @@
 The script for training
 """
 import subprocess
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 import torch
 import os
 import shutil
@@ -284,12 +284,12 @@ def train_val(cfg: DictConfig) -> None:
         )
 
 
-@hydra.main(config_path="conf/train.yaml")
+@hydra.main(config_path="conf", config_name="train.yaml")
 def main(cfg: DictConfig) -> None:
     "The entry point for training"
 
     sanity_check(cfg)
-    log.info("\n" + cfg.pretty())
+    log.info("\n" + OmegaConf.to_yaml(cfg))
 
     train_val(cfg)
 

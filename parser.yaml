@@ -15,6 +15,7 @@ dependencies:
   - mypy
   - black
   - hydra-core
+  - spacy
   - pip
   - pip:
     - transformers
