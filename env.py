@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader
 from tree import InternalParseNode, Tree
 from transition_systems import Action, AttachJuxtapose
 from collections import defaultdict
-from typing import Dict, Iterator, List, Any, Sequence, Tuple, Union
+from typing import Dict, Iterator, List, Any, Sequence, Tuple, Optional
 from utils import get_device
 
 
@@ -38,6 +38,8 @@ class State:
     next_token_pos: torch.Tensor
     # the number of actions executed on the current batch
     n_step: int
+    # batch_size, the index in the current batch
+    batch_idx: List[int]
 
     def __init__(
         self,
@@ -46,6 +48,7 @@ class State:
         tokens_emb: torch.Tensor,
         next_token_pos: torch.Tensor,
         n_step: int,
+        batch_idx: List[int],
     ) -> None:
         assert all(next_token_pos[i] <= len(sent) for i, sent in enumerate(tokens_word))
         assert (
@@ -59,11 +62,11 @@ class State:
         self.tokens_emb = tokens_emb
         self.next_token_pos = next_token_pos
         self.n_step = n_step
+        self.batch_idx = batch_idx
 
     @property
     def batch_size(self) -> int:
         "Here 'batch' actually means subbatch"
-
         return len(self.partial_trees)
 
 
@@ -93,9 +96,10 @@ class Environment:
     _start_idx: int
     _end_idx: int
     # predicted trees in the current subbatch
-    pred_trees: List[InternalParseNode]
+    pred_trees: List[Optional[InternalParseNode]]
     # ground truth trees in the current subbatch
     gt_trees: List[InternalParseNode]
+    # tensors in a batch
     _tensors_to_load = ["tokens_idx", "word_end_mask", "valid_tokens_mask", "tags_idx"]
 
     def __init__(
@@ -128,7 +132,7 @@ class Environment:
                 self.cached_data = next(self.loader)
             except StopIteration:
                 raise EpochEnd()
-            self.cached_data["num_examples"] = len(self.cached_data["trees"])
+            self.cached_data["num_examples"] = len(self.cached_data["tokens_word"])
             self._end_idx = 0
 
         self._start_idx = self._end_idx
@@ -191,9 +195,10 @@ class Environment:
                 batch_size, dtype=torch.int64, device=self.device
             ),
             n_step=0,
+            batch_idx=list(range(batch_size)),
         )
-        self.pred_trees = []
-        self.gt_trees = []
+        self.pred_trees = [None for _ in range(batch_size)]
+        self.gt_trees = self.data_batch["trees"] if "trees" in self.data_batch else None
 
         return self.state
 
@@ -208,6 +213,7 @@ class Environment:
         new_partial_trees = []
         new_tokens_word = []
         new_next_token_pos = []
+        new_batch_idx = []
         data_batch = defaultdict(list)
 
         for i, action in enumerate(actions):
@@ -223,8 +229,9 @@ class Environment:
                 # the tree is completed
                 done[i] = True
                 assert tree is not None
-                self.pred_trees.append(tree)
-                self.gt_trees.append(self.data_batch["trees"][i])
+                batch_idx = self.state.batch_idx[i]
+                assert self.pred_trees[batch_idx] is None
+                self.pred_trees[batch_idx] = tree
             else:
                 # the tree hasn't completed
                 new_partial_trees.append(tree)
@@ -232,6 +239,7 @@ class Environment:
                 for k, v in self.data_batch.items():
                     data_batch[k].append(v[i])
                 new_next_token_pos.append(pos + 1)
+                new_batch_idx.append(self.state.batch_idx[i])
 
         self.data_batch = dict(data_batch)
         self.state.partial_trees = new_partial_trees
@@ -241,6 +249,7 @@ class Environment:
             new_next_token_pos
         )
         self.state.n_step += 1
+        self.state.batch_idx = new_batch_idx
         all_done = done.all().item()
         assert isinstance(all_done, bool)
 

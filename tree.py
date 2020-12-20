@@ -60,6 +60,7 @@ DUMMY_LABEL = ()
 class InternalParseNode(ParseNode):
     "Internal nodes"
 
+    label: Label
     children: List[ParseNode]
 
     def __init__(

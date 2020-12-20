@@ -55,6 +55,7 @@ class Beam:
                 self.batch_size, dtype=torch.int64, device=device
             ),
             n_step=0,
+            batch_idx=list(range(self.batch_size)),
         )
 
         actions, log_probs = self.model(init_state, topk=self.beam_size)
@@ -63,6 +64,7 @@ class Beam:
         partial_trees = []
         tokens_word_expanded = []
         tokens_emb_expanded = []
+        batch_idx = []
         self.finished = torch.zeros(self.batch_size, dtype=torch.bool, device=device)
         self.pred_trees = [
             [None for _ in range(self.beam_size)] for _ in range(self.batch_size)
@@ -80,6 +82,7 @@ class Beam:
                     partial_trees.append(tree)
                     tokens_word_expanded.append(tokens_word[i])
                     tokens_emb_expanded.append(tokens_emb[i])
+                    batch_idx.append(i)
                 else:
                     self.finished[i] = True
                     self.pred_trees[i][j] = tree
@@ -94,6 +97,7 @@ class Beam:
                 len(partial_trees), dtype=torch.int64, device=device
             ),
             n_step=1,
+            batch_idx=batch_idx,
         )
         self.n_step = 1
 
@@ -116,6 +120,7 @@ class Beam:
         partial_trees = []
         tokens_word = []
         tokens_emb = []
+        batch_idx = []
         cnt = 0
 
         for i in range(self.batch_size):
@@ -141,6 +146,7 @@ class Beam:
                     partial_trees.append(tree)
                     tokens_word.append(self.tokens_word[i])
                     tokens_emb.append(self.tokens_emb[i])
+                    batch_idx.append(self.state.batch_idx[m])
 
             cnt += 1
 
@@ -159,6 +165,7 @@ class Beam:
                 (len(partial_trees),), fill_value=self.n_step
             ),
             n_step=self.n_step,
+            batch_idx=batch_idx,
         )
         return False
 

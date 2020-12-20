@@ -1,9 +1,9 @@
-exp_id: test
 model_path: null
+input: null
+output: null
+eval_batch_size: 80
 num_workers: 4
-eval_batch_size: 150
-beam_size: 1
-amp: true  # should be disabled when comparing speed with prior methods
+amp: true
 
 model_spec: [
     "d_model",
@@ -25,9 +25,6 @@ model_spec: [
     "max_sentence_len",
 ]
 
-defaults:
-  - dataset: ptb
-
 hydra:
   run:
-    dir: runs/${exp_id}
+    dir: runs/parse

@@ -64,8 +64,8 @@ We provide hyperparameters, training logs and pre-trained models for reproducing
 
 | Model         | EM       | F1      | LP      | LR       | Hyperparameters | Training log  | Pre-trained model | 
 | ------------- | -------- | ------- | ------- | -------- | --------------- | ------------- | ----------------- |
-| Ours (BERT)   | 56.79    | 95.71   | 95.96   | 95.46    | [ptb_bert_graph.yaml](./conf/model/ptb_bert_graph.yaml) | [ptb_bert_graph.txt](https://drive.google.com/file/d/15a2ffjJcp3v4dy8RU7Zcdl6k_s7WEWW9/view?usp=sharing)   | [ptb_bert_graph.pth](https://drive.google.com/file/d/10yW_lN48eAI4Ao2owqqZroGap9VaLonp/view?usp=sharing) |
-| Ours (XLNet)  | 59.48    | 96.44   | 96.65   | 96.23    | [ptb_xlnet_graph.yaml](./conf/model/ptb_xlnet_graph.yaml) | [ptb_xlnet_graph.txt](https://drive.google.com/file/d/1PHspvcUZMmUVJNiVxzVWxv7mFyge8Rbm/view?usp=sharing)   | [ptb_xlnet_graph.pth](https://drive.google.com/file/d/1sDuoeHDSzcT_MiXhSh_kzDqkCYswceEG/view?usp=sharing) |
+| Ours (BERT)   | 57.41    | 95.80   | 96.01   | 95.59    | [ptb_bert_graph.yaml](./conf/model/ptb_bert_graph.yaml) | [ptb_bert_graph.txt](https://drive.google.com/file/d/1xk89sktiVDsVBRExBbQ0vHzLplI4G4Qa/view?usp=sharing)   | [ptb_bert_graph.pth](https://drive.google.com/file/d/10yW_lN48eAI4Ao2owqqZroGap9VaLonp/view?usp=sharing) |
+| Ours (XLNet)  | 59.48    | 96.44   | 96.64   | 96.24    | [ptb_xlnet_graph.yaml](./conf/model/ptb_xlnet_graph.yaml) | [ptb_xlnet_graph.txt](https://drive.google.com/file/d/182Ejyqs1LoK_ttTJMkdUPqvMsQ503ILz/view?usp=sharing)   | [ptb_xlnet_graph.pth](https://drive.google.com/file/d/1sDuoeHDSzcT_MiXhSh_kzDqkCYswceEG/view?usp=sharing) |
 
 
 #### Constituency parsing on CTB
@@ -74,7 +74,7 @@ We provide hyperparameters, training logs and pre-trained models for reproducing
 
 | Model         | EM               | F1              | LP              | LR               | Hyperparameters | Training log  | Pre-trained model | 
 | ------------- | ---------------- | --------------- | --------------- | ---------------- | --------------- | ------------- | ----------------- |
-| Ours (BERT)   | 50.00            | 93.78           | 93.82           | 93.73            | [ctb_bert_graph.yaml](./conf/model/ctb_bert_graph.yaml) | [ctb_bert_graph.txt](https://drive.google.com/file/d/1G8mJpCtbxco7mE-q4zrsYBKwjYU_90JH/view?usp=sharing)   | [ctb_bert_graph.pth](https://drive.google.com/file/d/1aVSFLjSOOsCzzLPU-ZRykirrYe6r-J-7/view?usp=sharing)  |
+| Ours (BERT)   | 49.43            | 93.52           | 93.66           | 93.38            | [ctb_bert_graph.yaml](./conf/model/ctb_bert_graph.yaml) | [ctb_bert_graph.txt](https://drive.google.com/file/d/1VEHxje82dI7ZjlHAg3n9dAZaa97Xtm9T/view?usp=sharing)   | [ctb_bert_graph.pth](https://drive.google.com/file/d/1aVSFLjSOOsCzzLPU-ZRykirrYe6r-J-7/view?usp=sharing)  |
 
 
 ## Evaluation
@@ -115,6 +115,21 @@ We use a batch size of 150 during evaluation to fit our 11 GB GPU memory. Feel f
 ```
 python test.py model_path=PATH_TO_MODEL eval_batch_size=XXX
 ```
+
+
+## Parsing User-Provided Texts
+
+You can use the attach-juxtapose parser to parse your own sentences. 
+First, download the [spaCy](https://spacy.io/) English models used for tokenization and POS tagging:
+```
+python -m spacy download en_core_web_sm
+```
+
+Then, store the sentences in a text file, one sentence per line. See [input_examples.txt](./input_examples.txt) for example. Finally, run the parser from a model checkpoint `PATH_TO_MODEL`, saving the parse trees to `output.txt`:
+```
+python parse.py model_path=PATH_TO_MODEL input=input_examples.txt output=output.txt
+```
+
 
 
 
