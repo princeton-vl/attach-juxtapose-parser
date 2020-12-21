@@ -13,7 +13,7 @@ from models.parser import Parser
 from env import Environment, EpochEnd
 from transformers import AutoTokenizer
 from test import restore_hyperparams
-from utils import get_device
+from utils import get_device, load_model
 import spacy
 from progressbar import ProgressBar
 from typing import List, Dict, Any
@@ -131,7 +131,7 @@ def form_batch(examples: List[Dict[str, Any]]) -> Dict[str, Any]:
     return data_batch
 
 
-@hydra.main(config_path="conf", config_name="parse.yaml", strict=False)
+@hydra.main(config_path="conf", config_name="parse.yaml")
 def main(cfg: DictConfig) -> None:
     "The entry point for parsing user-provided texts"
 
@@ -142,7 +142,7 @@ def main(cfg: DictConfig) -> None:
     # load the model checkpoint
     model_path = hydra.utils.to_absolute_path(cfg.model_path)
     log.info("Loading the model from %s" % model_path)
-    checkpoint = torch.load(model_path)  # type: ignore
+    checkpoint = load_model(model_path)
     restore_hyperparams(checkpoint["cfg"], cfg)
     vocabs = checkpoint["vocabs"]
 
