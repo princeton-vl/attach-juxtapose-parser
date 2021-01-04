@@ -120,14 +120,16 @@ python test.py model_path=PATH_TO_MODEL eval_batch_size=XXX
 ## Parsing User-Provided Texts
 
 You can use the attach-juxtapose parser to parse your own sentences. 
-First, download the [spaCy](https://spacy.io/) English models used for tokenization and POS tagging:
+First, download the [spaCy](https://spacy.io/) models used for tokenization and POS tagging:
 ```
 python -m spacy download en_core_web_sm
+python -m spacy download zh_core_web_sm
 ```
 
 Then, store the sentences in a text file, one sentence per line. See [input_examples.txt](./input_examples.txt) for example. Finally, run the parser from a model checkpoint `PATH_TO_MODEL`, saving the parse trees to `output.txt`:
 ```
 python parse.py model_path=PATH_TO_MODEL input=input_examples.txt output=output.txt
+python parse.py language=chinese model_path=ctb_bert_graph.pth input=input_examples_chinese.txt output=output_chinese.txt
 ```
 
 

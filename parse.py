@@ -28,13 +28,17 @@ class UserProvidedTexts(Dataset):  # type: ignore
     vocabs: Dict[str, Any]
     tag_idx_map: Dict[str, int]
 
-    def __init__(self, filename: str, vocabs: Dict[str, Any], encoder: str) -> None:
+    def __init__(
+        self, filename: str, language: str, vocabs: Dict[str, Any], encoder: str
+    ) -> None:
         self.words = []
         self.tags = []
         self.vocabs = vocabs
         self.tag_idx_map = {t: i for i, t in enumerate(self.vocabs["tag"])}
 
-        spacy_model = spacy.load("en_core_web_sm")
+        spacy_model = spacy.load(
+            "en_core_web_sm" if language == "english" else "zh_core_web_sm"
+        )
         bar = ProgressBar()
         log.info("Loading input sentences and performing POS tagging..")
 
@@ -137,6 +141,7 @@ def main(cfg: DictConfig) -> None:
 
     assert cfg.model_path is not None, "Need to specify model_path for testing."
     assert cfg.input is not None
+    assert cfg.language in ("english", "chinese")
     log.info("\n" + OmegaConf.to_yaml(cfg))
 
     # load the model checkpoint
@@ -154,7 +159,7 @@ def main(cfg: DictConfig) -> None:
     log.info("#parameters = %d" % sum([p.numel() for p in model.parameters()]))
 
     input_file = hydra.utils.to_absolute_path(cfg.input)
-    ds = UserProvidedTexts(input_file, vocabs, cfg.encoder)
+    ds = UserProvidedTexts(input_file, cfg.language, vocabs, cfg.encoder)
     loader = DataLoader(
         ds,
         batch_size=cfg.eval_batch_size,

@@ -1,6 +1,7 @@
 model_path: null
 input: null
 output: null
+language: "english"
 eval_batch_size: 80
 num_workers: 4
 amp: true
