@@ -126,7 +126,7 @@ python -m spacy download en_core_web_sm
 python -m spacy download zh_core_web_sm
 ```
 
-Then, store the sentences in a text file, one sentence per line. See [input_examples.txt](./input_examples.txt) and[input_examples_chinese.txt](./input_examples_chinese.txt) for examples. Finally, run the parser from a model checkpoint `PATH_TO_MODEL`, saving the parse trees to `output.txt`:
+Then, store the sentences in a text file, one sentence per line. See [input_examples.txt](./input_examples.txt) and [input_examples_chinese.txt](./input_examples_chinese.txt) for examples. Finally, run the parser from a model checkpoint `PATH_TO_MODEL`, saving the parse trees to `output.txt`:
 ```
 python parse.py model_path=PATH_TO_MODEL input=input_examples.txt output=output.txt
 python parse.py language=chinese model_path=ctb_bert_graph.pth input=input_examples_chinese.txt output=output_chinese.txt
