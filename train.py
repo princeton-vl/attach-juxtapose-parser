@@ -14,7 +14,7 @@ from dataloader import create_dataloader
 from env import Environment, EpochEnd
 from models.parser import Parser
 from tree import Label
-from utils import get_device, count_params, count_actions, conf2dict
+from utils import get_device, load_model, count_params, count_actions, conf2dict
 from loss import action_loss, action_seqs_loss
 from test import validate
 import gc
@@ -224,7 +224,7 @@ def train_val(cfg: DictConfig) -> None:
     )
     start_epoch = 0
     if cfg.resume is not None:  # resume training from a checkpoint
-        checkpoint = torch.load(cfg.resume)  # type: ignore
+        checkpoint = load_model(cfg.resume)
         model.load_state_dict(checkpoint["model_state"])
         start_epoch = checkpoint["epoch"] + 1
         optimizer.load_state_dict(checkpoint["optimizer_state"])

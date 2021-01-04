@@ -16,6 +16,15 @@ def get_device() -> Tuple[torch.device, bool]:
     return torch.device("cuda" if use_gpu else "cpu"), use_gpu
 
 
+def load_model(model_path: str) -> Dict[str, Any]:
+    "Load a model checkpoint"
+
+    if torch.cuda.is_available():
+        return torch.load(model_path)  # type: ignore
+    else:
+        return torch.load(model_path, map_location=torch.device("cpu"))  # type: ignore
+
+
 def count_params(model: nn.Module) -> int:
     "The number of parameters in a PyTorch model"
 

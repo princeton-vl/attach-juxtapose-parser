@@ -14,7 +14,7 @@ from evaluation_metric import FScore, evalb
 from env import Environment, EpochEnd, State
 from progressbar import ProgressBar
 from tree import InternalParseNode
-from utils import get_device
+from utils import get_device, load_model
 from beam_search import beam_search
 from typing import Dict, Any
 import logging
@@ -78,6 +78,7 @@ def restore_hyperparams(saved_cfg: Dict[str, Any], cfg: DictConfig) -> DictConfi
     """
     Restore the hyperparameters in a checkpoint
     """
+    OmegaConf.set_struct(cfg, False)
     log.info("Restoring hyperparameters from the saved model checkpoint..")
     for name in cfg.model_spec:
         if name not in saved_cfg:
@@ -91,7 +92,7 @@ def restore_hyperparams(saved_cfg: Dict[str, Any], cfg: DictConfig) -> DictConfi
     return cfg
 
 
-@hydra.main(config_path="conf", config_name="test.yaml", strict=False)
+@hydra.main(config_path="conf", config_name="test.yaml")
 def main(cfg: DictConfig) -> None:
     "The entry point for testing"
 
@@ -101,7 +102,7 @@ def main(cfg: DictConfig) -> None:
     # restore the hyperparameters used for training
     model_path = hydra.utils.to_absolute_path(cfg.model_path)
     log.info("Loading the model from %s" % model_path)
-    checkpoint = torch.load(model_path)  # type: ignore
+    checkpoint = load_model(model_path)
     restore_hyperparams(checkpoint["cfg"], cfg)
 
     # create dataloaders for validation and testing
