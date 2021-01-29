@@ -6,7 +6,7 @@
 Code for the paper:  
 
 [Strongly Incremental Constituency Parsing with Graph Neural Networks](https://arxiv.org/abs/2010.14568)      
-Kaiyu Yang and Jia Deng   
+[Kaiyu Yang](https://www.cs.princeton.edu/~kaiyuy/) and [Jia Deng](https://www.cs.princeton.edu/~jiadeng/)     
 Neural Information Processing Systems (NeurIPS) 2020   
 
 ```
