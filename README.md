@@ -13,7 +13,7 @@ Neural Information Processing Systems (NeurIPS) 2020
 @inproceedings{yang2020attachjuxtapose,
   title={Strongly Incremental Constituency Parsing with Graph Neural Networks},
   author={Yang, Kaiyu and Deng, Jia},
-  booktitle={Neural Information Processing Systems},
+  booktitle={Neural Information Processing Systems (NeurIPS)},
   year={2020},
 }
 ```
