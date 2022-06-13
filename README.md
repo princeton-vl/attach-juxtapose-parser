@@ -9,7 +9,7 @@ Code for the paper:
 [Kaiyu Yang](https://www.cs.princeton.edu/~kaiyuy/) and [Jia Deng](https://www.cs.princeton.edu/~jiadeng/)     
 Neural Information Processing Systems (NeurIPS) 2020   
 
-```
+```bibtex
 @inproceedings{yang2020attachjuxtapose,
   title={Strongly Incremental Constituency Parsing with Graph Neural Networks},
   author={Yang, Kaiyu and Deng, Jia},
@@ -39,17 +39,17 @@ We include the preprocessed PTB and CTB data in the [data](./data) directory. No
 Use [train.py](./train.py) for training models. By default, `python train.py` trains the parser on PTB using XLNet encoder and graph decoder. It saves training logs and model checkpoints to `./runs/default`. We use [hydra](https://hydra.cc/) to manage command-line arguments. Please refer to [conf/train.yaml](./conf/train.yaml) for the complete list of them. Below are some examples:
 
 * To save results to `./runs/EXPID`, where `EXPID` is an arbitrary experiment identifier:
-```
+```bash
 python train.py exp_id=EXPID
 ```
 
 * To use BERT instead of XLNet
-```
+```bash
 python train.py model=ptb_bert_graph
 ```
 
 * To train on CTB using Chinese BERT as the encoder:
-```
+```bash
 python train.py dataset=ctb model=ctb_bert_graph
 ```
 
@@ -81,7 +81,7 @@ We provide hyperparameters, training logs and pre-trained models for reproducing
 
 
 To evaluate a model checkpoint on PTB:
-```
+```bash
 python test.py model_path=PATH_TO_MODEL dataset=ptb
 ```
 
@@ -89,13 +89,13 @@ python test.py model_path=PATH_TO_MODEL dataset=ptb
 
 
 To evaluate on CTB:
-```
+```bash
 python test.py model_path=PATH_TO_MODEL dataset=ctb
 ```
 
 
 To evaluate with beam search:
-```
+```bash
 python test.py model_path=PATH_TO_MODEL dataset=ptb/ctb beam_size=10
 ```
 
@@ -104,7 +104,7 @@ Please refer to [conf/test.yaml](./conf/test.yaml) for the complete list of comm
 
 #### Automatic Mixed Precision (AMP) Support
 The evaluation script has [amp](https://pytorch.org/docs/stable/amp.html) enabled by default. In our experiments, amp speeds up the evaluation when using GTX 2080 Ti or Quadro RTX 6000, but it makes no difference when using GTX 1080 Ti. You may have to disable it when comparing speed with prior works without amp support.
-```
+```bash
 python test.py model_path=PATH_TO_MODEL amp=false
 ```
 
@@ -112,7 +112,7 @@ python test.py model_path=PATH_TO_MODEL amp=false
 #### GPU memory
 
 We use a batch size of 150 during evaluation to fit our 11 GB GPU memory. Feel free to change it according to your hardware.
-```
+```bash
 python test.py model_path=PATH_TO_MODEL eval_batch_size=XXX
 ```
 
@@ -121,14 +121,14 @@ python test.py model_path=PATH_TO_MODEL eval_batch_size=XXX
 
 You can use the attach-juxtapose parser to parse your own sentences. 
 First, download the [spaCy](https://spacy.io/) models used for tokenization and POS tagging:
-```
+```bash
 python -m spacy download en_core_web_sm
 python -m spacy download zh_core_web_sm
 ```
 
 Then, store the sentences in a text file, one sentence per line. See [input_examples.txt](./input_examples.txt) and [input_examples_chinese.txt](./input_examples_chinese.txt) for examples.  
 Finally, run the parser from a model checkpoint `PATH_TO_MODEL`, saving the parse trees to a output file, e.g., `output.txt` or `output_chinese.txt`:
-```
+```bash
 python parse.py model_path=PATH_TO_MODEL input=input_examples.txt output=output.txt
 python parse.py language=chinese model_path=PATH_TO_MODEL input=input_examples_chinese.txt output=output_chinese.txt
 ```
