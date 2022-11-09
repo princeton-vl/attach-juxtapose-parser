@@ -146,3 +146,8 @@ The codebase uses [Python 3 type hints](https://docs.python.org/3.6/library/typi
 * The code for the self-attention layers ([models/utils.py](./models/utils.py)) is based on [self-attentive-parser](https://github.com/nikitakit/self-attentive-parser). 
 * We include the code of the [Evalb](https://nlp.cs.nyu.edu/evalb/) tool for calculating evaluation metrics. 
 * The code is formatted using [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black).
+
+
+## Third-Party Implementations
+
+* [SuPar](https://github.com/yzhangcs/parser)
