@@ -219,10 +219,16 @@ class Environment:
         for i, action in enumerate(actions):
             # execute the ith action
             pos = self.state.next_token_pos[i].item()
+            assert isinstance(pos, int)
             tag = self.data_batch["tags"][i][pos]
             word = self.data_batch["tokens_word"][i][pos]
             tree = AttachJuxtapose.execute(
-                self.state.partial_trees[i], action, pos, tag, word, immutable=False,  # type: ignore
+                self.state.partial_trees[i],
+                action,
+                pos,
+                tag,
+                word,
+                immutable=False,
             )
 
             if is_completing(self.state, i):

@@ -86,7 +86,11 @@ def evalb(
             outfile.write("{}\n".format(tree.linearize()))
 
     command = "{} -p {} {} {} > {}".format(
-        evalb_program_path, evalb_param_path, gold_path, predicted_path, output_path,
+        evalb_program_path,
+        evalb_param_path,
+        gold_path,
+        predicted_path,
+        output_path,
     )
     subprocess.run(command, shell=True)
 

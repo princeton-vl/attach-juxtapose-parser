@@ -19,7 +19,7 @@ class OneHotEmbedding(nn.Module):
     "One-hot embeddings for tokens or POS tags"
 
     def __init__(self, num_words: int, d_emb: int) -> None:
-        super().__init__()  # type: ignore
+        super().__init__()
         self.embedding = nn.Embedding(num_words, d_emb)
 
     def forward(
@@ -33,7 +33,7 @@ class TransformerEmbedding(nn.Module):
     "Transformers followed by a linear projection layer"
 
     def __init__(self, encoder: str, d_emb: int) -> None:
-        super().__init__()  # type: ignore
+        super().__init__()
         self.contextual_embedding = AutoModel.from_pretrained(encoder)
         self.linear = nn.Linear(1024 if "-large" in encoder else 768, d_emb, bias=False)
 
@@ -60,7 +60,7 @@ class Encoder(nn.Module):
     def __init__(
         self, position_table: torch.Tensor, vocabs: Dict[str, Any], cfg: DictConfig
     ) -> None:
-        super().__init__()  # type: ignore
+        super().__init__()
 
         # whether to use POS tags
         self.use_tags = cfg.use_tags

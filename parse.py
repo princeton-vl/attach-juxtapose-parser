@@ -44,7 +44,7 @@ class UserProvidedTexts(Dataset):  # type: ignore
 
         for i, line in enumerate(open(filename)):
             sentence = line.strip()
-            assert sentence != ""
+            assert sentence != "", "Please remove empty lines in the input file!"
             words_sent = []
             tags_sent = []
             for t in spacy_model(sentence):
@@ -177,9 +177,9 @@ def main(cfg: DictConfig) -> None:
     )
     time_start = time()
 
-    with torch.no_grad():  # type: ignore
+    with torch.no_grad():
         while True:
-            with torch.cuda.amp.autocast(cfg.amp):  # type: ignore
+            with torch.cuda.amp.autocast(cfg.amp):
                 actions, _ = model(state)
             state, done = env.step(actions)
             if done:
@@ -189,7 +189,7 @@ def main(cfg: DictConfig) -> None:
                 # pred_trees.extend(env.pred_trees)
                 # load the next batch
                 try:
-                    with torch.cuda.amp.autocast(cfg.amp):  # type: ignore
+                    with torch.cuda.amp.autocast(cfg.amp):
                         state = env.reset()
                 except EpochEnd:
                     # no next batch available (complete)

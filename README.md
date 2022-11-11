@@ -25,7 +25,6 @@ Neural Information Processing Systems (NeurIPS) 2020
 1. `cd` into the root of this repo.  
 1. Edit [parser.yaml](./parser.yaml) according to your system. For example, remove [- cudatoolkit=10.2](./parser.yaml#L11) if you don't have a GPU. Change the version of cudatoolkit if necessary.  
 1. Install Python dependencies using conda: `conda env create -f parser.yaml && conda activate parser`. If you have troubles with the aforementioned two steps, you may manually install the packages in [parser.yaml](./parser.yaml) in whatever way that works for you. 
-1. Instatll [PyTorch Geometric](https://github.com/rusty1s/pytorch_geometric) following the [instructions](https://pytorch-geometric.readthedocs.io/en/latest/notes/installation.html). 
 1. Compile the [Evalb](https://nlp.cs.nyu.edu/evalb/) program used for evaluation: `cd EVALB && make && cd ..`
 
 

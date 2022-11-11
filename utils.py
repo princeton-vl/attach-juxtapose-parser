@@ -38,10 +38,10 @@ def count_actions(
 
     if isinstance(pred[0], list):
         num_correct = np.sum(
-            np.sum(x == y for x, y in zip(pred_seq, gt_seq))
+            np.sum(x == y for x, y in zip(pred_seq, gt_seq))  # type: ignore
             for pred_seq, gt_seq in zip(pred, gt)
         )
-        num_total = np.sum(len(pred_seq) for pred_seq in pred)
+        num_total = np.sum(len(pred_seq) for pred_seq in pred)  # type: ignore
 
     else:
         num_correct = np.sum([x == y for x, y in zip(pred, gt)])

@@ -65,7 +65,11 @@ class TreeBank(Dataset):  # type: ignore
     tokenizer: Any
 
     def __init__(
-        self, datapath: str, split: str, encoder: str, vocabs: Optional[Dict[str, Any]],
+        self,
+        datapath: str,
+        split: str,
+        encoder: str,
+        vocabs: Optional[Dict[str, Any]],
     ) -> None:
         super().__init__()
         assert split in ["train", "val", "test"]

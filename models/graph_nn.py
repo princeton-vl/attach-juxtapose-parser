@@ -60,7 +60,7 @@ class GraphNeuralNetwork(nn.Module):
     convs: List[nn.Module]
 
     def __init__(self, d_model: int, num_layers: int) -> None:
-        super().__init__()  # type: ignore
+        super().__init__()
         self.convs = []
         self.layernorms = []
         for i in range(num_layers):
@@ -72,7 +72,9 @@ class GraphNeuralNetwork(nn.Module):
             self.add_module("layernorm_%d" % i, layernorm)
 
     def forward(
-        self, graph: torch_geometric.data.Batch, nodes_of_interest: torch.Tensor,
+        self,
+        graph: torch_geometric.data.Batch,
+        nodes_of_interest: torch.Tensor,
     ) -> torch.Tensor:
         x, edge_index = graph.x, graph.edge_index
 

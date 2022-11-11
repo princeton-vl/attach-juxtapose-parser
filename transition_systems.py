@@ -46,7 +46,12 @@ class AttachJuxtapose:
 
     @staticmethod
     def execute(
-        tree: Tree, action: Action, pos: int, tag: str, word: str, immutable: bool,
+        tree: Tree,
+        action: Action,
+        pos: int,
+        tag: str,
+        word: str,
+        immutable: bool,
     ) -> InternalParseNode:
         "Sec. 3 in the paper"
 
@@ -57,10 +62,10 @@ class AttachJuxtapose:
         action_type, target_node_idx, parent_label, new_label = action
 
         # create the subtree to be inserted
-        new_subtree: Union[
-            InternalParseNode, LeafParseNode
-        ] = new_leaf if parent_label == DUMMY_LABEL else InternalParseNode(
-            parent_label, [new_leaf], None
+        new_subtree: Union[InternalParseNode, LeafParseNode] = (
+            new_leaf
+            if parent_label == DUMMY_LABEL
+            else InternalParseNode(parent_label, [new_leaf], None)
         )
 
         # find the target position at which to insert the new subtree

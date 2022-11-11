@@ -15,7 +15,7 @@ class Parser(nn.Module):
     decoder: Union[GraphDecoder, SequenceDecoder]
 
     def __init__(self, vocabs: Dict[str, Any], cfg: DictConfig) -> None:
-        super().__init__()  # type: ignore
+        super().__init__()
 
         # The position embedding used by both the self-attention encoder and the GCN
         d_positional = cfg.d_model - cfg.d_model // 2

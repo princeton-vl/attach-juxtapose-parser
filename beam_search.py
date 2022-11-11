@@ -136,7 +136,12 @@ class Beam:
                 tag = self.tags[i][self.n_step]
                 word = self.tokens_word[i][self.n_step]
                 tree = AttachJuxtapose.execute(
-                    current_tree, action, self.n_step, tag, word, immutable=True,
+                    current_tree,
+                    action,
+                    self.n_step,
+                    tag,
+                    word,
+                    immutable=True,
                 )
                 assert isinstance(tree, InternalParseNode)
                 if self.n_step >= len(self.tokens_word[i]) - 1:
@@ -188,7 +193,7 @@ def beam_search(
     bar = ProgressBar(max_value=len(loader))
     time_start = time()
 
-    with torch.no_grad():  # type: ignore
+    with torch.no_grad():
 
         for i, data_batch in enumerate(loader):
             # calculate token embeddings
@@ -200,7 +205,11 @@ def beam_search(
             )
             # initialize the beam
             beam = Beam(
-                data_batch["tokens_word"], data_batch["tags"], tokens_emb, model, cfg,
+                data_batch["tokens_word"],
+                data_batch["tags"],
+                tokens_emb,
+                model,
+                cfg,
             )
             # keep executing actions and updating the beam until the entire batch is finished
             while not beam.grow():

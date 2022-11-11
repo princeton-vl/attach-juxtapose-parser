@@ -113,7 +113,7 @@ def train(
             state = env.reset(force=True)  # load a new batch
         except EpochEnd:
             accuracy = 100 * num_correct_actions / num_total_actions
-            return num_iters, accuracy, np.mean(losses)
+            return num_iters, accuracy, float(np.mean(losses))
 
         # log training stats
         if (num_examples / cfg.batch_size) % cfg.log_freq == 0:
@@ -121,7 +121,12 @@ def train(
             running_accuracy = 100 * num_correct_actions / num_total_actions
             log.info(
                 "[%d] Loss: %.03f, Running accuracy: %.03f, Time: %.02f"
-                % (num_examples, recent_loss, running_accuracy, time() - time_start,)
+                % (
+                    num_examples,
+                    recent_loss,
+                    running_accuracy,
+                    time() - time_start,
+                )
             )
             time_start = time()
 
@@ -220,7 +225,9 @@ def train_val(cfg: DictConfig) -> None:
 
     # create the optimizer
     optimizer = torch.optim.RMSprop(
-        model.parameters(), lr=cfg.learning_rate, weight_decay=cfg.weight_decay,
+        model.parameters(),
+        lr=cfg.learning_rate,
+        weight_decay=cfg.weight_decay,
     )
     start_epoch = 0
     if cfg.resume is not None:  # resume training from a checkpoint
@@ -248,7 +255,12 @@ def train_val(cfg: DictConfig) -> None:
         if not cfg.skip_training:
             log.info("Training..")
             num_iters, accuracy_train, loss_train = train(
-                num_iters, loader_train, model, optimizer, vocabs["label"], cfg,
+                num_iters,
+                loader_train,
+                model,
+                optimizer,
+                vocabs["label"],
+                cfg,
             )
             log.info(
                 "Action accuracy: %.03f, Loss: %.03f" % (accuracy_train, loss_train)

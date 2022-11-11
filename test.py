@@ -35,9 +35,9 @@ def validate(loader: torch.utils.data.DataLoader, model: Parser, cfg: DictConfig
     gt_trees = []
     time_start = time()
 
-    with torch.no_grad():  # type: ignore
+    with torch.no_grad():
         while True:
-            with torch.cuda.amp.autocast(cfg.amp):  # type: ignore
+            with torch.cuda.amp.autocast(cfg.amp):
                 actions, _ = model(state)
 
             if cfg.decoder == "graph":
@@ -63,7 +63,7 @@ def validate(loader: torch.utils.data.DataLoader, model: Parser, cfg: DictConfig
 
             # load the next batch
             try:
-                with torch.cuda.amp.autocast(cfg.amp):  # type: ignore
+                with torch.cuda.amp.autocast(cfg.amp):
                     state = env.reset()
             except EpochEnd:
                 # no next batch available (complete)

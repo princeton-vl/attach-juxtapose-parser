@@ -31,6 +31,7 @@ SOFTWARE.
 import torch
 import torch.nn as nn
 import numpy as np
+from numpy.typing import ArrayLike
 from typing import List, Optional, Tuple, Any, Union
 
 
@@ -39,9 +40,9 @@ class BatchIndices:
     Batch indices container class (used to implement packed batches)
     """
 
-    def __init__(self, batch_idxs_arr: Union[np.array, torch.Tensor]) -> None:
+    def __init__(self, batch_idxs_arr: Union[ArrayLike, torch.Tensor]) -> None:
         if torch.is_tensor(batch_idxs_arr):  # type: ignore
-            self.batch_idxs_np = batch_idxs_arr.cpu().numpy()
+            self.batch_idxs_np = batch_idxs_arr.cpu().numpy()  # type: ignore
             self.batch_idxs_torch = batch_idxs_arr
         else:
             self.batch_idxs_np = batch_idxs_arr
@@ -131,7 +132,7 @@ class FeatureDropout(nn.Module):
     """
 
     def __init__(self, p: float = 0.5, inplace: bool = False) -> None:
-        super().__init__()  # type: ignore
+        super().__init__()
         if p < 0 or p > 1:
             raise ValueError(
                 "dropout probability has to be between 0 and 1, " "but got {}".format(p)
@@ -147,7 +148,7 @@ class FeatureDropout(nn.Module):
 
 class LayerNormalization(nn.Module):
     def __init__(self, d_hid: int, eps: float = 1e-3, affine: bool = True) -> None:
-        super(LayerNormalization, self).__init__()  # type: ignore
+        super(LayerNormalization, self).__init__()
 
         self.eps = eps
         self.affine = affine
@@ -178,8 +179,8 @@ class LayerNormalization(nn.Module):
 
 class ScaledDotProductAttention(nn.Module):
     def __init__(self, d_model: int, attention_dropout: float = 0.1) -> None:
-        super(ScaledDotProductAttention, self).__init__()  # type: ignore
-        self.temper = d_model ** 0.5
+        super(ScaledDotProductAttention, self).__init__()
+        self.temper = d_model**0.5
         self.dropout = nn.Dropout(attention_dropout)
         self.softmax = nn.Softmax(dim=-1)
 
@@ -231,7 +232,7 @@ class MultiHeadAttention(nn.Module):
         attention_dropout: float = 0.1,
         d_positional: Optional[int] = None,
     ) -> None:
-        super(MultiHeadAttention, self).__init__()  # type: ignore
+        super(MultiHeadAttention, self).__init__()
 
         self.n_head = n_head
         self.d_k = d_k
@@ -402,7 +403,13 @@ class MultiHeadAttention(nn.Module):
             outputs2 = (
                 torch.transpose(outputs2, 0, 1).contiguous().view(-1, n_head * d_v1)
             )
-            outputs = torch.cat([self.proj1(outputs1), self.proj2(outputs2),], -1)
+            outputs = torch.cat(
+                [
+                    self.proj1(outputs1),
+                    self.proj2(outputs2),
+                ],
+                -1,
+            )
 
         return outputs
 
@@ -424,7 +431,10 @@ class MultiHeadAttention(nn.Module):
         )
 
         outputs_padded, attns_padded = self.attention(
-            q_padded, k_padded, v_padded, attn_mask=attn_mask,
+            q_padded,
+            k_padded,
+            v_padded,
+            attn_mask=attn_mask,
         )
         outputs = outputs_padded[output_mask]
         outputs = self.combine_v(outputs)
@@ -443,7 +453,7 @@ class PartitionedPositionwiseFeedForward(nn.Module):
         relu_dropout: float = 0.1,
         residual_dropout: float = 0.1,
     ) -> None:
-        super().__init__()  # type: ignore
+        super().__init__()
         self.d_content = d_hid - d_positional
         self.w_1c = nn.Linear(self.d_content, d_ff // 2)
         self.w_1p = nn.Linear(d_positional, d_ff // 2)

@@ -1,17 +1,19 @@
 name: parser
 channels:
   - pytorch
+  - pyg
   - defaults
   - conda-forge
 dependencies:
-  - python=3.6
+  - python=3.8
   - ipython
   - numpy
   - lark-parser
   - progressbar2
-  - cudatoolkit=10.2
+  - cudatoolkit=11.6
   - torchvision
-  - pytorch
+  - pytorch=1.12.1
+  - pyg
   - mypy
   - black
   - hydra-core

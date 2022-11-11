@@ -53,8 +53,8 @@ def decode_actions(
                     if label_vocab[new_label_idx[i, j].item()] == DUMMY_LABEL  # type: ignore
                     else "juxtapose",
                     target_node=node_idx[i, j].item(),  # type: ignore
-                    parent_label=label_vocab[parent_label_idx[i, j]],  # type: ignore
-                    new_label=label_vocab[new_label_idx[i, j]],  # type: ignore
+                    parent_label=label_vocab[parent_label_idx[i, j]],
+                    new_label=label_vocab[new_label_idx[i, j]],
                 )
                 for j in range(max_len)
             ]
@@ -121,7 +121,7 @@ class SequenceDecoder(nn.Module):
     "A two-layer neural network predicting the action based on the current token feature"
 
     def __init__(self, vocabs: Dict[str, Any], cfg: DictConfig) -> None:
-        super().__init__()  # type: ignore
+        super().__init__()
         self.cfg = cfg
         self.label_vocab = vocabs["label"]
 
@@ -129,7 +129,10 @@ class SequenceDecoder(nn.Module):
             nn.Linear(cfg.d_model, cfg.d_decoder),
             nn.LayerNorm([cfg.d_decoder]),
             nn.ReLU(),
-            nn.Linear(cfg.d_decoder, cfg.max_sentence_len + 2 * len(self.label_vocab),),
+            nn.Linear(
+                cfg.d_decoder,
+                cfg.max_sentence_len + 2 * len(self.label_vocab),
+            ),
             # target_node in Action cannot exceed max_sentence_len
         )
 
@@ -143,10 +146,14 @@ class SequenceDecoder(nn.Module):
         node_logits = all_logits[:, :, : self.cfg.max_sentence_len]
         num_labels = len(self.label_vocab)
         parent_label_logits = all_logits[
-            :, :, self.cfg.max_sentence_len : (self.cfg.max_sentence_len + num_labels),
+            :,
+            :,
+            self.cfg.max_sentence_len : (self.cfg.max_sentence_len + num_labels),
         ]
         new_label_logits = all_logits[
-            :, :, (self.cfg.max_sentence_len + num_labels) :,
+            :,
+            :,
+            (self.cfg.max_sentence_len + num_labels) :,
         ]
 
         # when in the initial state, parent_label must NOT be () and new_label must be ()
@@ -154,7 +161,10 @@ class SequenceDecoder(nn.Module):
         new_label_logits[:, 0, 1:] = float("-inf")
 
         actions = decode_actions(
-            node_logits, parent_label_logits, new_label_logits, self.label_vocab,
+            node_logits,
+            parent_label_logits,
+            new_label_logits,
+            self.label_vocab,
         )
 
         # truncate action sequences to match sentence lengths
@@ -187,7 +197,7 @@ class GraphDecoder(nn.Module):
     def __init__(
         self, position_table: torch.Tensor, vocabs: Dict[str, Any], cfg: DictConfig
     ):
-        super().__init__()  # type: ignore
+        super().__init__()
         self.position_table = position_table
         self.label_idx_map = {label: i for i, label in enumerate(vocabs["label"])}
         self.cfg = cfg
@@ -303,7 +313,9 @@ class GraphDecoder(nn.Module):
             else torch.empty(2, 0, dtype=torch.int64, device=device)
         )
         graph = torch_geometric.data.Batch(
-            batch=node_batch_idx, x=node_emb, edge_index=all_edges_index,
+            batch=node_batch_idx,
+            x=node_emb,
+            edge_index=all_edges_index,
         )
 
         graph.on_rightmost_chain = torch.tensor(
@@ -375,7 +387,7 @@ class ActionDecoder(nn.Module):
     labels_layers: nn.Module
 
     def __init__(self, d_model: int, label_vocab: List[Label]) -> None:
-        super().__init__()  # type: ignore
+        super().__init__()
         self.label_vocab = label_vocab
         self.num_labels = len(label_vocab)
 
@@ -465,7 +477,10 @@ class ActionDecoder(nn.Module):
         if topk is None:
             # decode only the most likely action
             actions = decode_actions(
-                node_logits, parent_label_logits, new_label_logits, self.label_vocab,
+                node_logits,
+                parent_label_logits,
+                new_label_logits,
+                self.label_vocab,
             )
             logits = {
                 "target_node": node_logits,
