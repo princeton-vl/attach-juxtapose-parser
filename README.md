@@ -6,7 +6,7 @@
 Code for the paper:  
 
 [Strongly Incremental Constituency Parsing with Graph Neural Networks](https://arxiv.org/abs/2010.14568)      
-[Kaiyu Yang](https://www.cs.princeton.edu/~kaiyuy/) and [Jia Deng](https://www.cs.princeton.edu/~jiadeng/)     
+[Kaiyu Yang](https://yangky11.github.io/) and [Jia Deng](https://www.cs.princeton.edu/~jiadeng/)     
 Neural Information Processing Systems (NeurIPS) 2020   
 
 ```bibtex
@@ -63,8 +63,8 @@ We provide hyperparameters, training logs and pre-trained models for reproducing
 
 | Model         | EM       | F1      | LP      | LR       | Hyperparameters | Training log  | Pre-trained model | 
 | ------------- | -------- | ------- | ------- | -------- | --------------- | ------------- | ----------------- |
-| Ours (BERT)   | 57.41    | 95.80   | 96.01   | 95.59    | [ptb_bert_graph.yaml](./conf/model/ptb_bert_graph.yaml) | [ptb_bert_graph.txt](https://drive.google.com/file/d/1xk89sktiVDsVBRExBbQ0vHzLplI4G4Qa/view?usp=sharing)   | [ptb_bert_graph.pth](https://drive.google.com/file/d/10yW_lN48eAI4Ao2owqqZroGap9VaLonp/view?usp=sharing) |
-| Ours (XLNet)  | 59.48    | 96.44   | 96.64   | 96.24    | [ptb_xlnet_graph.yaml](./conf/model/ptb_xlnet_graph.yaml) | [ptb_xlnet_graph.txt](https://drive.google.com/file/d/182Ejyqs1LoK_ttTJMkdUPqvMsQ503ILz/view?usp=sharing)   | [ptb_xlnet_graph.pth](https://drive.google.com/file/d/1sDuoeHDSzcT_MiXhSh_kzDqkCYswceEG/view?usp=sharing) |
+| Ours (BERT)   | 57.41    | 95.80   | 96.01   | 95.59    | [ptb_bert_graph.yaml](./conf/model/ptb_bert_graph.yaml) | [ptb_bert_graph.txt](https://huggingface.co/kaiyuy/attach-juxtapose-parser-ptb-bert/blob/main/ptb_bert_graph.txt)   | [ptb_bert_graph.pth](https://huggingface.co/kaiyuy/attach-juxtapose-parser-ptb-bert) |
+| Ours (XLNet)  | 59.48    | 96.44   | 96.64   | 96.24    | [ptb_xlnet_graph.yaml](./conf/model/ptb_xlnet_graph.yaml) | [ptb_xlnet_graph.txt](https://huggingface.co/kaiyuy/attach-juxtapose-parser-ptb-xlnet/blob/main/ptb_xlnet_graph.txt)   | [ptb_xlnet_graph.pth](https://huggingface.co/kaiyuy/attach-juxtapose-parser-ptb-xlnet) |
 
 
 #### Constituency parsing on CTB
@@ -73,7 +73,7 @@ We provide hyperparameters, training logs and pre-trained models for reproducing
 
 | Model         | EM               | F1              | LP              | LR               | Hyperparameters | Training log  | Pre-trained model | 
 | ------------- | ---------------- | --------------- | --------------- | ---------------- | --------------- | ------------- | ----------------- |
-| Ours (BERT)   | 49.43            | 93.52           | 93.66           | 93.38            | [ctb_bert_graph.yaml](./conf/model/ctb_bert_graph.yaml) | [ctb_bert_graph.txt](https://drive.google.com/file/d/1VEHxje82dI7ZjlHAg3n9dAZaa97Xtm9T/view?usp=sharing)   | [ctb_bert_graph.pth](https://drive.google.com/file/d/1aVSFLjSOOsCzzLPU-ZRykirrYe6r-J-7/view?usp=sharing)  |
+| Ours (BERT)   | 49.43            | 93.52           | 93.66           | 93.38            | [ctb_bert_graph.yaml](./conf/model/ctb_bert_graph.yaml) | [ctb_bert_graph.txt](https://drive.google.com/file/d/1VEHxje82dI7ZjlHAg3n9dAZaa97Xtm9T/view?usp=sharing)   | [ctb_bert_graph.pth](https://huggingface.co/kaiyuy/attach-juxtapose-parser-ctb-bert)  |
 
 
 ## Evaluation
