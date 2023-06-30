@@ -73,7 +73,7 @@ We provide hyperparameters, training logs and pre-trained models for reproducing
 
 | Model         | EM               | F1              | LP              | LR               | Hyperparameters | Training log  | Pre-trained model | 
 | ------------- | ---------------- | --------------- | --------------- | ---------------- | --------------- | ------------- | ----------------- |
-| Ours (BERT)   | 49.43            | 93.52           | 93.66           | 93.38            | [ctb_bert_graph.yaml](./conf/model/ctb_bert_graph.yaml) | [ctb_bert_graph.txt](https://drive.google.com/file/d/1VEHxje82dI7ZjlHAg3n9dAZaa97Xtm9T/view?usp=sharing)   | [ctb_bert_graph.pth](https://huggingface.co/kaiyuy/attach-juxtapose-parser-ctb-bert)  |
+| Ours (BERT)   | 49.43            | 93.52           | 93.66           | 93.38            | [ctb_bert_graph.yaml](./conf/model/ctb_bert_graph.yaml) | [ctb_bert_graph.txt](https://huggingface.co/kaiyuy/attach-juxtapose-parser-ctb-bert/blob/main/ctb_bert_graph.txt)   | [ctb_bert_graph.pth](https://huggingface.co/kaiyuy/attach-juxtapose-parser-ctb-bert)  |
 
 
 ## Evaluation
